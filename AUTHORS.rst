@@ -24,6 +24,7 @@ The following wonderful people contributed directly or indirectly to this projec
 - `daimajia <https://github.com/daimajia>`_
 - `Daniel Reed <https://github.com/nmlorg>`_
 - `Eli Gao <https://github.com/eligao>`_
+- `Emilio Molinari <https://github.com/xates>`_
 - `ErgoZ Riftbit Vaper <https://github.com/ergoz>`_
 - `Eugene Lisitsky <https://github.com/lisitsky>`_
 - `Eugenio Panadero <https://github.com/azogue>`_
@@ -54,6 +55,7 @@ The following wonderful people contributed directly or indirectly to this projec
 - `Oleg Sushchenko <https://github.com/feuillemorte>`_
 - `overquota <https://github.com/overquota>`_
 - `Patrick Hofmann <https://github.com/PH89>`_
+- `Paul Larsen <https://github.com/PaulSonOfLars>`_
 - `Pieter Schutz <https://github.com/eldinnie>`_
 - `Rahiel Kasim <https://github.com/rahiel>`_
 - `Sascha <https://github.com/saschalalala>`_
