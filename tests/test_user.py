@@ -35,15 +35,16 @@ def json_dict():
 
 @pytest.fixture(scope='function')
 def user(bot):
-    return User(TestUser.id, TestUser.first_name, TestUser.is_bot, last_name=TestUser.last_name,
-                username=TestUser.username, language_code=TestUser.language_code, bot=bot)
+    return User(id=TestUser.id, first_name=TestUser.first_name, is_bot=TestUser.is_bot,
+                last_name=TestUser.last_name, username=TestUser.username,
+                language_code=TestUser.language_code, bot=bot)
 
 
 class TestUser(object):
     id = 1
     is_bot = True
-    first_name = 'first_name'
-    last_name = 'last_name'
+    first_name = u'first\u2022name'
+    last_name = u'last\u2022name'
     username = 'username'
     language_code = 'en_us'
 
@@ -85,16 +86,21 @@ class TestUser(object):
     def test_name(self, user):
         assert user.name == '@username'
         user.username = None
-        assert user.name == 'first_name last_name'
+        assert user.name == u'first\u2022name last\u2022name'
         user.last_name = None
-        assert user.name == 'first_name'
+        assert user.name == u'first\u2022name'
         user.username = self.username
         assert user.name == '@username'
 
     def test_full_name(self, user):
-        assert user.full_name == 'first_name last_name'
+        assert user.full_name == u'first\u2022name last\u2022name'
         user.last_name = None
-        assert user.full_name == 'first_name'
+        assert user.full_name == u'first\u2022name'
+
+    def test_link(self, user):
+        assert user.link == 'https://t.me/{}'.format(user.username)
+        user.username = None
+        assert user.link is None
 
     def test_get_profile_photos(self, monkeypatch, user):
         def test(_, *args, **kwargs):
@@ -158,6 +164,22 @@ class TestUser(object):
 
         monkeypatch.setattr('telegram.Bot.send_voice', test)
         assert user.send_voice('test_voice')
+
+    def test_mention_html(self, user):
+        expected = u'<a href="tg://user?id={}">{}</a>'
+
+        assert user.mention_html() == expected.format(user.id, user.full_name)
+        assert user.mention_html('the<b>name\u2022') == expected.format(user.id,
+                                                                        'the&lt;b&gt;name\u2022')
+        assert user.mention_html(user.username) == expected.format(user.id, user.username)
+
+    def test_mention_markdown(self, user):
+        expected = u'[{}](tg://user?id={})'
+
+        assert user.mention_markdown() == expected.format(user.full_name, user.id)
+        assert user.mention_markdown('the_name*\u2022') == expected.format('the\_name\*\u2022',
+                                                                           user.id)
+        assert user.mention_markdown(user.username) == expected.format(user.username, user.id)
 
     def test_equality(self):
         a = User(self.id, self.first_name, self.is_bot, self.last_name)
